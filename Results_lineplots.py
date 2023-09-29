@@ -15,7 +15,7 @@ save_dir = './results'
 # Create a single figure with three subplots
 fig, axs = plt.subplots(1, 3, figsize=(8, 2.75), constrained_layout=True, gridspec_kw={'wspace': 0.03, 'left': 0.04}, sharey=True, facecolor='whitesmoke')
 fig.text(0.005, 0.5, 'Fitness', va='center', ha = 'center', rotation='vertical', fontsize=10)
-fig.suptitle('Evolution of a population of specialist agents using 2 crossover strategies', fontsize=12, fontweight='bold', x=0.45, y=0.99, va='center')
+fig.suptitle("Population Evolution of Specialist Agents Using 2 Evolutionary Algorithms", fontsize=12, fontweight='bold', x=0.45, y=0.99, va='center')
 
 # Loop over 3 enemies
 for idx, enemy in enumerate([2, 5, 8]):
