@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
+runs = 10
 save_dir = './results'
 
 # Create a single figure with three subplots
@@ -28,7 +29,7 @@ for idx, enemy in enumerate([2, 5, 8]):
     for method in (1,2):
         # Make a list of all directories with the results of 10 runs
         fitness_dir = []
-        for run in range(1, 11):
+        for run in range(1, runs+1):
             directory = f'method{method}_enemy{enemy}_run{run}'
             fitness_dir.append(directory)
 
@@ -103,7 +104,7 @@ for idx, enemy in enumerate([2, 5, 8]):
     # Set plot labels and title
     axs[idx].set_xlim(0, 24)
     axs[idx].set_xlabel('Generation', fontsize=9, labelpad=3)
-    axs[idx].set_ylim(0, 120)
+    axs[idx].set_ylim(0, 100)
     axs[idx].tick_params(axis='both', labelsize=7)
     axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
     axs[idx].grid(True, linestyle='--', alpha=0.6)

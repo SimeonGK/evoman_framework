@@ -1,3 +1,9 @@
+###############################################################################
+# Evoman assignment 			                                              #
+# Author: Julia Lammers        			                                      #
+# 27-09-2023                    			                                  #
+###############################################################################
+
 import os
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,7 +31,7 @@ for idx, enemy in enumerate([2, 5, 8]):
             directories.append(directory)
 
         for dir in directories:
-            file_path = os.path.join(dir, "mean_gain.txt")
+            file_path = os.path.join(dir, "mean_gain.txt") # mean_gain.txt file contains 1 float, which is the mean result over 5 test runs
 
             with open(file_path, "r") as file:
                 try:
@@ -39,33 +45,6 @@ for idx, enemy in enumerate([2, 5, 8]):
     # Perform ANOVA test
     f_statistic, p_value = stats.f_oneway(*all_gains)
 
-    # Create boxplots on the respective subplot
-    bp = axs[idx].boxplot(all_gains, patch_artist=True)
-
-    # Set colors for boxplot 1 and boxplot 2
-    for i, box in enumerate(bp['boxes']):
-        if i == 0:
-            box.set(facecolor='C6', alpha=0.7)  # Set box color and transparency for boxplot 1
-        elif i == 1:
-            box.set(facecolor='C2', alpha=0.7)  # Set box color and transparency for boxplot 2
-
-    for median in bp['medians']:
-        if i == 0:
-            median.set(color='C6', linewidth=1)  # Set median line color for boxplot 1
-        elif i == 1:
-            median.set(color='C2', linewidth=1)  # Set median line color for boxplot 2
-
-
-    for median in bp['medians']:
-        median.set(color='black', linewidth=1)  # Set median line color and thickness
-
-    axs[idx].set_xticks([1, 2])
-    axs[idx].set_xticklabels(['Method 1', 'Method 2'])
-    axs[idx].tick_params(axis='y', labelsize=7)
-    #axs[idx].set_ylabel("Gain (Ep - Ee)")
-    axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
-    axs[idx].grid(True, linestyle='--', alpha=0.6)
-
     # Print ANOVA results
     print(f'ANOVA for Enemy {enemy}:')
     print(f'F-statistic: {f_statistic}')
@@ -78,8 +57,27 @@ for idx, enemy in enumerate([2, 5, 8]):
     else:
         print('not significant')
 
+    # Create boxplots on the respective subplot
+    bp = axs[idx].boxplot(all_gains, patch_artist=True)
+
+    # Set colors for boxplot 1 and boxplot 2
+    for i, box in enumerate(bp['boxes']):
+        if i == 0:
+            box.set(facecolor='C6', alpha=0.7)
+        elif i == 1:
+            box.set(facecolor='C2', alpha=0.7)
+
+    for median in bp['medians']:
+        median.set(color='black', linewidth=1)
+
+    # Add plot labels an titles
+    axs[idx].set_xticks([1, 2])
+    axs[idx].set_xticklabels(['Method 1', 'Method 2'])
+    axs[idx].tick_params(axis='y', labelsize=7)
+    axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
+    axs[idx].grid(True, linestyle='--', alpha=0.6)
+
 # Save and show the plot
 fig.tight_layout()
-#fig.text(0.04, 0.5, 'Gain (Ep - Ee)', va='center', rotation='vertical', fontsize=10)
 fig.savefig(os.path.join(save_dir, 'Boxplot_comparison_all_enemies.png'), dpi=300, bbox_inches='tight')
 fig.show()
