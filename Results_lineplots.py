@@ -103,7 +103,7 @@ for idx, enemy in enumerate([2, 5, 8]):
 
     # Set plot labels and title
     axs[idx].set_xlim(0, 24)
-    axs[idx].set_xlabel('Generation', fontsize=9, labelpad=3)
+    axs[idx].set_xlabel('Generation ($\mathit{n}$)', fontsize=9, labelpad=3)
     axs[idx].set_ylim(0, 100)
     axs[idx].tick_params(axis='both', labelsize=7)
     axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
