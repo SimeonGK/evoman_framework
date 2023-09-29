@@ -9,22 +9,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-
-# Directories containing results.txt per method
-### We must use 10 results.txt files per method
-
 save_dir = './results'
 
-for enemy in (2,5,8):
-    #method1 = []
-    #method2 = []
+# Create a single figure with three subplots
+fig, axs = plt.subplots(1, 3, figsize=(8, 2.75), constrained_layout=True, gridspec_kw={'wspace': 0.03, 'left': 0.04}, sharey=True)
+fig.text(0.005, 0.5, 'Fitness', va='center', ha = 'center', rotation='vertical', fontsize=10)
+fig.suptitle('Evolution of a population of specialist agents using 2 crossover strategies', fontsize=12, fontweight='bold', x=0.45, y=0.99, va='center')
 
+# Loop over 3 enemies
+for idx, enemy in enumerate([2, 5, 8]):
+    # Store mean & best values per method in lists
     avg_mean_total = []
     std_mean_total = []
     avg_best_total = []
     std_best_total = []
 
+    # Extract data per method out of result dictionaries and plot
     for method in (1,2):
+        # Make a list of all directories with the results of 10 runs
         fitness_dir = []
         for run in range(1, 11):
             directory = f'method{method}_enemy{enemy}_run{run}'
@@ -64,73 +66,53 @@ for enemy in (2,5,8):
         avg_mean_values = [np.mean(avg_mean[gen]) for gen in x_values]
         std_mean_values = [np.std(avg_mean[gen]) for gen in x_values]
         avg_best_values = [np.mean(avg_best[gen]) for gen in x_values]
-        std_best_values = [np.mean(avg_std[gen]) for gen in x_values]
+        std_best_values = [np.std(avg_best[gen]) for gen in x_values]
 
+        # Store both methods in lists
         avg_mean_total.append(avg_mean_values)
         std_mean_total.append(std_mean_values)
         avg_best_total.append(avg_best_values)
         std_best_total.append(std_best_values)
 
-    width = 3.25
-    height = 4.5
-    plt.figure(figsize=(width, height), facecolor='#F0F0F0')
+    # Make plot per method
+    width = 1
+    height = 1.5
+
     # Create a line plot for method 1
-    plt.plot(x_values, avg_mean_total[0], label='Method 1 Mean', color='C4', linewidth=1)
-    plt.plot(x_values, avg_best_total[0], label='Method 1 Best', color='C6', linewidth=1)
-    plt.fill_between(x_values, np.array(avg_mean_total[0]) - np.array(std_mean_total[0]), np.array(avg_mean_total[0]) + np.array(std_mean_total[0]),
-                     color='C4', alpha=0.2,linewidth=0.5)
-    plt.fill_between(x_values, np.array(avg_best_total[0]) - np.array(std_best_total[0]), np.array(avg_best_total[0]) + np.array(std_best_total[0]),
-                     color='C6', alpha=0.2, linewidth=0.5)
-    #plt.errorbar(x_values, avg_mean_total[0], yerr=std_mean_values, fmt='none', ecolor='black',
-                 #label='Standard Deviation')
-    #plt.errorbar(x_values, avg_best_total[0], yerr=std_best_values, fmt='none', ecolor='black', label='Standard Deviation')
+    axs[idx].plot(x_values, avg_mean_total[0], label='Method 1 Mean', color='C4', linewidth=1)
+    axs[idx].plot(x_values, avg_best_total[0], label='Method 1 Best', color='C6', linewidth=1)
+    axs[idx].fill_between(x_values,
+                          np.array(avg_mean_total[0]) - np.array(std_mean_total[0]),
+                          np.array(avg_mean_total[0]) + np.array(std_mean_total[0]),
+                          color='C4', alpha=0.2, linewidth=0.5)
+    axs[idx].fill_between(x_values,
+                          np.array(avg_best_total[0]) - np.array(std_best_total[0]),
+                          np.array(avg_best_total[0]) + np.array(std_best_total[0]),
+                          color='C6', alpha=0.2, linewidth=0.5)
 
-
-    #Create a lineplot for method 2
-    plt.plot(x_values, avg_mean_total[1], label='Method 2 Mean', color='C0', linewidth=1)
-    plt.plot(x_values, avg_best_total[1], label='Method 2 Best', color='C2', linewidth=1)
-    plt.fill_between(x_values, np.array(avg_mean_total[1]) - np.array(std_mean_total[1]), np.array(avg_mean_total[1]) + np.array(std_mean_total[1]),
-                     color='C0', alpha=0.2, linewidth=0.5)
-    plt.fill_between(x_values, np.array(avg_best_total[1]) - np.array(std_best_total[1]), np.array(avg_best_total[1]) + np.array(std_best_total[1]),
-                     color='C2', alpha=0.2, linewidth=0.5)
+    # Create a lineplot for method 2
+    axs[idx].plot(x_values, avg_mean_total[1], label='Method 2 Mean', color='C0', linewidth=1)
+    axs[idx].plot(x_values, avg_best_total[1], label='Method 2 Best', color='C2', linewidth=1)
+    axs[idx].fill_between(x_values, np.array(avg_mean_total[1]) - np.array(std_mean_total[1]),
+                          np.array(avg_mean_total[1]) + np.array(std_mean_total[1]),
+                          color='C0', alpha=0.2, linewidth=0.5)
+    axs[idx].fill_between(x_values, np.array(avg_best_total[1]) - np.array(std_best_total[1]),
+                          np.array(avg_best_total[1]) + np.array(std_best_total[1]),
+                          color='C2', alpha=0.2, linewidth=0.5)
 
     # Set plot labels and title
-    plt.xlim(0, 25)
-    plt.xlabel('Generation', fontsize=9, labelpad=3)
-    plt.ylim(0, 120)
-    plt.ylabel('Fitness', fontsize=9, labelpad=1)
-    plt.tick_params(axis='both', labelsize=7)
-    plt.title(f'Enemy {enemy} EA method comparison', fontsize=10, fontweight='bold')
-    plt.grid(True, linestyle='--', alpha=0.6)
+    axs[idx].set_xlim(0, 24)
+    axs[idx].set_xlabel('Generation', fontsize=9, labelpad=3)
+    axs[idx].set_ylim(0, 120)
+    axs[idx].tick_params(axis='both', labelsize=7)
+    axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
+    axs[idx].grid(True, linestyle='--', alpha=0.6)
 
-    # Add a legend to distinguish different lines
-    plt.legend(fontsize=9)
-    plt.savefig(os.path.join(save_dir, f'Lineplot method comparison enemy {enemy}.png'), dpi=300, bbox_inches='tight')
+    # Add legend in the third plot
+    if idx == 2:
+        axs[2].legend(fontsize=9, loc = 'lower right')
 
-"""
-for dataset_name, dataset in data_dict.items():
-    plt.plot(dataset['gen'], dataset['mean'], label=dataset_name)
-
-
-# Set plot labels and title
-plt.xlabel('Generation')
-plt.ylabel('Fitness')
-plt.title('Fitness over time')
-
-# Add a legend to distinguish different datasets
-plt.legend()
-
-# Show the plot
-plt.show()
-
-
-
-#### TO DO:
-
-- Het gemiddelde van alle lijnen plotten ipv alle lijnen los.
-- STD toevoegen (we hebben maar 1 std, kan ik die gebruiken voor zowel best als mean?) Std over generaties ?
-- Ook best plotten.
-- Vragen: wat als niet alle runs evenveel generaties hebben?
-
-- Overwegen: Dictionary anders indelen als bovenstaande niet lukt. 
-"""
+# Save and show the plot
+fig.tight_layout()
+fig.savefig(os.path.join(save_dir, 'Lineplot_comparison_EA_methods_over_enemies.png'), dpi=300, bbox_inches='tight')
+fig.show()
