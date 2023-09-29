@@ -19,12 +19,16 @@ for enemy in (2,5,8):
     #method1 = []
     #method2 = []
 
+    avg_mean_total = []
+    std_mean_total = []
+    avg_best_total = []
+    std_best_total = []
+
     for method in (1,2):
         fitness_dir = []
         for run in range(1, 11):
             directory = f'method{method}_enemy{enemy}_run{run}'
             fitness_dir.append(directory)
-        print(fitness_dir)
 
         # Initialize empty dictionaries to store the data from each file
         dict = {directory: {"gen": [], "best": [], "mean": [], "std": []} for directory in fitness_dir}
@@ -62,32 +66,46 @@ for enemy in (2,5,8):
         avg_best_values = [np.mean(avg_best[gen]) for gen in x_values]
         std_best_values = [np.mean(avg_std[gen]) for gen in x_values]
 
-        width = 3.25
-        height = 2.25
-        plt.figure(figsize=(width, height), facecolor='#F0F0F0')
-        # Create a line plot for avg_mean
-        plt.plot(x_values, avg_mean_values, label='Average Mean', color='blue')
+        avg_mean_total.append(avg_mean_values)
+        std_mean_total.append(std_mean_values)
+        avg_best_total.append(avg_best_values)
+        std_best_total.append(std_best_values)
 
-        # Create a line plot for avg_best
-        plt.plot(x_values, avg_best_values, label='Average Best', color='green')
+    width = 3.25
+    height = 4.5
+    plt.figure(figsize=(width, height), facecolor='#F0F0F0')
+    # Create a line plot for method 1
+    plt.plot(x_values, avg_mean_total[0], label='Method 1 Mean', color='C4', linewidth=1)
+    plt.plot(x_values, avg_best_total[0], label='Method 1 Best', color='C6', linewidth=1)
+    plt.fill_between(x_values, np.array(avg_mean_total[0]) - np.array(std_mean_total[0]), np.array(avg_mean_total[0]) + np.array(std_mean_total[0]),
+                     color='C4', alpha=0.2,linewidth=0.5)
+    plt.fill_between(x_values, np.array(avg_best_total[0]) - np.array(std_best_total[0]), np.array(avg_best_total[0]) + np.array(std_best_total[0]),
+                     color='C6', alpha=0.2, linewidth=0.5)
+    #plt.errorbar(x_values, avg_mean_total[0], yerr=std_mean_values, fmt='none', ecolor='black',
+                 #label='Standard Deviation')
+    #plt.errorbar(x_values, avg_best_total[0], yerr=std_best_values, fmt='none', ecolor='black', label='Standard Deviation')
 
-        # Error bars for standard deviation (avg_std)
-        plt.errorbar(x_values, avg_mean_values, yerr=std_mean_values, fmt='none', ecolor='black',
-                     label='Standard Deviation')
-        # plt.errorbar(x_values, avg_best_values, yerr=std_best_values, fmt='none', ecolor='black', label='Standard Deviation')
 
-        # Set plot labels and title
-        plt.xlim(-1, 25)
-        plt.xlabel('Generation', fontsize=9, labelpad=3)
-        plt.ylim(0, 100)
-        plt.ylabel('Fitness', fontsize=9, labelpad=1)
-        plt.tick_params(axis='both', labelsize=7)
-        plt.title(f'Method {method}, enemy {enemy}', fontsize=10, fontweight='bold')
-        plt.grid(True, linestyle='--', alpha=0.6)
+    #Create a lineplot for method 2
+    plt.plot(x_values, avg_mean_total[1], label='Method 2 Mean', color='C0', linewidth=1)
+    plt.plot(x_values, avg_best_total[1], label='Method 2 Best', color='C2', linewidth=1)
+    plt.fill_between(x_values, np.array(avg_mean_total[1]) - np.array(std_mean_total[1]), np.array(avg_mean_total[1]) + np.array(std_mean_total[1]),
+                     color='C0', alpha=0.2, linewidth=0.5)
+    plt.fill_between(x_values, np.array(avg_best_total[1]) - np.array(std_best_total[1]), np.array(avg_best_total[1]) + np.array(std_best_total[1]),
+                     color='C2', alpha=0.2, linewidth=0.5)
 
-        # Add a legend to distinguish different lines
-        plt.legend(fontsize=9)
-        plt.savefig(os.path.join(save_dir, f'method {method}, enemy {enemy}.png'), dpi=300, bbox_inches='tight')
+    # Set plot labels and title
+    plt.xlim(0, 25)
+    plt.xlabel('Generation', fontsize=9, labelpad=3)
+    plt.ylim(0, 120)
+    plt.ylabel('Fitness', fontsize=9, labelpad=1)
+    plt.tick_params(axis='both', labelsize=7)
+    plt.title(f'Enemy {enemy} EA method comparison', fontsize=10, fontweight='bold')
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    # Add a legend to distinguish different lines
+    plt.legend(fontsize=9)
+    plt.savefig(os.path.join(save_dir, f'Lineplot method comparison enemy {enemy}.png'), dpi=300, bbox_inches='tight')
 
 """
 for dataset_name, dataset in data_dict.items():
