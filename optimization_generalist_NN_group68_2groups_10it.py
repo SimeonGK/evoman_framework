@@ -115,12 +115,13 @@ def main():
     sigma = 0.1  # Tuned range [0.4,0.2,0.1,.05,.025]. 0.1 remained the best
     q = 10 #Tuned range 6-14 with steps of two. HIgher selection pressure gave worse results. Lower selection pressure made no difference/slightly better (low q)
 
-    for group, nr in enumerate(([1,2,3,4,5,6,7,8],[1,3,7,2])):   # We compare two groups of enemies. 2nd group reflected a broad type of enemies.
+    for nr, group in enumerate(([1,2,3,4,5,6,7,8],[1,2,3,7])):   # We compare two groups of enemies. 2nd group reflected a broad type of enemies.
+        nr = nr+1
         for run_variable in range(1,11):     # 10 runs per agent
 
             if not os.path.exists('Final_Results_Task_II'):
                 os.makedirs('Final_Results_Task_II')
-            directory_name = f'TaskII_group{nr+1}_{run_variable}'
+            directory_name = f'TaskII_group{nr}_{run_variable}'
             experiment_name = f'./Final_Results_Task_II/{directory_name}'
             if not os.path.exists(experiment_name):
                 os.makedirs(experiment_name)
@@ -129,7 +130,7 @@ def main():
 
             # initializes simulation in individual evolution mode, for single static enemy.
             env = Environment(experiment_name=experiment_name,
-                            enemies=group,    # tested once bc 1 and 4 performed bad [1,2,4,5],
+                            enemies=group,
                             multiplemode="yes",
                             playermode="ai",
                             player_controller=player_controller(n_hidden_neurons),
@@ -147,7 +148,7 @@ def main():
             lower_weight = -1
             npop = 100
             gens = 100
-            run_mode = 'train'
+            run_mode = 'test'
 
             # Function to test an experiment.
             if run_mode == 'test':
