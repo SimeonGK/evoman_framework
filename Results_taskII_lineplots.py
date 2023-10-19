@@ -19,7 +19,7 @@ fig, axs = plt.subplots(1, 2, figsize=(8, 2.75), constrained_layout=True, gridsp
 fig.text(0.005, 0.5, 'Fitness', va='center', ha = 'center', rotation='vertical', fontsize=10)
 fig.suptitle("Population Evolution of Generalist Agents", fontsize=12, fontweight='bold',va='center')
 
-directory_name = ['./Final_Results_Task_II','./Final_Results_Task_II_NEAT_2']
+directory_name = ['./Final_Results_Task_II','./Final_Results_Task_II_NEAT']
 for idx, group in enumerate((('1 t/m 8'),('1,2,3,7'))):   # Now these are 2 results to compare, later we want these to be 2 groups of enemies
     avg_mean_total = []
     std_mean_total = []
@@ -77,8 +77,8 @@ for idx, group in enumerate((('1 t/m 8'),('1,2,3,7'))):   # Now these are 2 resu
         avg_best_total.append(avg_best_values)
         std_best_total.append(std_best_values)
 
-    axs[idx].plot(x_values, avg_mean_total[0], label='Method 1 Mean', color='C4', linewidth=1)
-    axs[idx].plot(x_values, avg_best_total[0], label='Method 1 Best', color='C6', linewidth=1)
+    axs[idx].plot(x_values, avg_mean_total[0], label='NN Mean', color='C4', linewidth=1)
+    axs[idx].plot(x_values, avg_best_total[0], label='NN Best', color='C6', linewidth=1)
     axs[idx].fill_between(x_values,
                         np.array(avg_mean_total[0]) - np.array(std_mean_total[0]),
                         np.array(avg_mean_total[0]) + np.array(std_mean_total[0]),
@@ -88,8 +88,8 @@ for idx, group in enumerate((('1 t/m 8'),('1,2,3,7'))):   # Now these are 2 resu
                         np.array(avg_best_total[0]) + np.array(std_best_total[0]),
                         color='C6', alpha=0.2, linewidth=0.5)
     # Create a lineplot for method 2
-    axs[idx].plot(x_values, avg_mean_total[1], label='Method 2 Mean', color='C0', linewidth=1)
-    axs[idx].plot(x_values, avg_best_total[1], label='Method 2 Best', color='C2', linewidth=1)
+    axs[idx].plot(x_values, avg_mean_total[1], label='NEAT Mean', color='C0', linewidth=1)
+    axs[idx].plot(x_values, avg_best_total[1], label='NEAT Best', color='C2', linewidth=1)
     axs[idx].fill_between(x_values, np.array(avg_mean_total[1]) - np.array(std_mean_total[1]),
                         np.array(avg_mean_total[1]) + np.array(std_mean_total[1]),
                         color='C0', alpha=0.2, linewidth=0.5)
@@ -101,13 +101,13 @@ for idx, group in enumerate((('1 t/m 8'),('1,2,3,7'))):   # Now these are 2 resu
     axs[idx].set_xlabel('Generation ($\mathit{n}$)', fontsize=9, labelpad=3)
     axs[idx].set_ylim(0, generations)
     axs[idx].tick_params(axis='both', labelsize=7)
-    axs[idx].set_title(f'Group {groupnr} ({group}a)', fontsize=10)
+    axs[idx].set_title(f'Group {groupnr} ({group})', fontsize=10)
     axs[idx].grid(True, linestyle='--', alpha=0.6)
 
-    axs[1].legend(fontsize=9, loc='lower right')
+    axs[0].legend(fontsize=9, loc='upper left')
 
 # Save and show the plot
 #fig.tight_layout()
-fig.savefig(os.path.join(plots_dir, 'Neural network lineplots_2.png'), dpi=300, bbox_inches='tight')
+fig.savefig(os.path.join(plots_dir, 'Lineplot_TaskII.png'), dpi=300, bbox_inches='tight')
 fig.show()
 
