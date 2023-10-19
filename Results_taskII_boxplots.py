@@ -10,47 +10,47 @@ import numpy as np
 import scipy.stats as stats
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-save_dir = './results'
+
+save_dir = './Plots_Task_II'
+directory_name = ['./Final_Results_Task_II','./Final_Results_Task_II_NEAT']
 runs = 10
 
 # Create a single figure with three subplots
-fig, axs = plt.subplots(1, 3, figsize=(8, 2.75), constrained_layout=True, gridspec_kw={'wspace': 0.03, 'left': 0.04}, sharey=True, facecolor='whitesmoke')
-fig.text(0.001, 0.5, 'Gain ($\mathit{Ep - Ee}$)', va='center', ha='center', rotation='vertical', fontsize=10)
-fig.suptitle('Comparison of Specialist Agent Performance Using 2 Evolutionary Algorithms', fontsize=12, fontweight='bold', x=0.45, y=0.99, va='center')
+fig, axs = plt.subplots(1, 2, figsize=(4, 2.75), constrained_layout=True, gridspec_kw={'wspace': 0.03, 'left': 0.04}, sharey=True, facecolor='whitesmoke')
+fig.text(0.001, 0.5, 'Gain ($\mathit{\u03A3(Ep - Ee)}$)', va='center', ha='center', rotation='vertical', fontsize=10)
+fig.suptitle('Comparison of Generalist Agent Performance', fontsize=12, fontweight='bold', va='center')
 
 # Loop over 3 enemies
 for idx, group in enumerate((('1 t/m 8'),('1,2,3,7'))):
     groupnr = idx + 1
-    #all_gains = []
+    all_gains = []
 
-#for i in (1, 2): # Method
-    gains = []
-    directories = []
+    for i in range(2): # Method
+        gains = []
+        directories = []
 
-    for run in range(1, runs + 1):
-        directory = f'./Final_Results_Task_II/TaskII_group{groupnr}_{run}'
-        directories.append(directory)
+        for run in range(1, runs + 1):
+            directory = f'{directory_name[i]}/TaskII_group{groupnr}_{run}'
+            directories.append(directory)
 
-    for dir in directories:
-        file_path = os.path.join(dir, "mean_gain.txt") # mean_gain.txt file contains 1 float, which is the mean result over 5 test runs
+        for dir in directories:
+            file_path = os.path.join(dir, "mean_gain.txt") # mean_gain.txt file contains 1 float, which is the mean result over 5 test runs
 
-        with open(file_path, "r") as file:
-            try:
-                float_value = float(file.read().strip())
-                gains.append(float_value)
-                print(gains)
-            except ValueError:
-                print("Error: The file does not contain a valid float value.")
+            with open(file_path, "r") as file:
+                try:
+                    float_value = float(file.read().strip())
+                    gains.append(float_value)
+                    print(gains)
+                except ValueError:
+                    print("Error: The file does not contain a valid float value.")
 
-    #all_gains.append(gains)
+        all_gains.append(gains)
 
-print(all_gains)
-"""
     # Perform ANOVA test
     f_statistic, p_value = stats.f_oneway(*all_gains)
 
     # Print ANOVA results
-    print(f'ANOVA for Enemy {enemy}:')
+    print(f'ANOVA for Group {group}:')
     print(f'F-statistic: {f_statistic}')
     print(f'p-value: {p_value}')
 
@@ -62,7 +62,7 @@ print(all_gains)
         print('not significant')
 
     # Create boxplots on the respective subplot
-    bp = axs[idx].boxplot(all_gains, patch_artist=True)
+    bp = axs[idx].boxplot(all_gains, patch_artist=True, widths=0.4)
 
     # Set colors for boxplot 1 and boxplot 2
     for i, box in enumerate(bp['boxes']):
@@ -76,13 +76,12 @@ print(all_gains)
 
     # Add plot labels an titles
     axs[idx].set_xticks([1, 2])
-    axs[idx].set_xticklabels(['Method 1', 'Method 2'])
+    axs[idx].set_xticklabels(['NN', 'NEAT'])
     axs[idx].tick_params(axis='y', labelsize=7)
-    axs[idx].set_title(f'Enemy {enemy}', fontsize=10)
+    axs[idx].set_title(f'Group {group}', fontsize=10)
     axs[idx].grid(True, linestyle='--', alpha=0.6)
 
 # Save and show the plot
-fig.tight_layout()
-fig.savefig(os.path.join(save_dir, 'Boxplot_comparison_all_enemies.png'), dpi=300, bbox_inches='tight')
+#fig.tight_layout()
+fig.savefig(os.path.join(save_dir, 'Boxplot_TaskII.png'), dpi=300, bbox_inches='tight')
 fig.show()
-"""
